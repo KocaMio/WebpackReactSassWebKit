@@ -1,13 +1,35 @@
+// Init Variable
+const isProduction = process.env.NODE_ENV === 'production';
+const sassLoader = isProduction ? ['css-loader', 'sass-loader'] : ['style-loader', 'css-loader', 'sass-loader'];
+
+// Load Nodejs Module
 const Path = require('path');
+
+// Load Webpack Plugin
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const Webpack = require('webpack');
 
-// Create Extract Instance
+// Plugins Instance
+const htmlWebpackPlugin = new HtmlWebpackPlugin({
+    template: './src/static/index.html',
+    filename: 'index.html',
+    hash: true
+});
+
 const extractSass = new ExtractTextPlugin({
     filename: 'style.css', 
-    // disable: true // TODO: true in development, false in production
+    disable: isProduction ? false : true
 });
+
+const cleanWebpackPlugin = new CleanWebpackPlugin([Path.resolve(__dirname, 'src/boot/*')], {
+    verbose: true
+})
+
+const namedModulesPlugin = new Webpack.NamedModulesPlugin();
+
+const hotModuleReplacementPlugin = new Webpack.HotModuleReplacementPlugin();
 
 module.exports = {
     entry: './src/assets/scripts/index.jsx',
@@ -20,18 +42,15 @@ module.exports = {
         contentBase: Path.resolve(__dirname, 'src/boot'),
         compress: true,
         hot: true,
-        port: 5656
+        port: 5656,
+        open: true
     },
     module: {
         rules: [
             {
                 test: /\.scss$/,
                 use: extractSass.extract({
-                    use: [
-                        // 'style-loader',
-                        'css-loader',
-                        'sass-loader'
-                    ]
+                    use: sassLoader
                 })
             }, {
                 test: /\.(js|jsx)$/,
@@ -51,10 +70,9 @@ module.exports = {
     },
     plugins: [
         extractSass,
-        new CleanWebpackPlugin([Path.resolve(__dirname, 'src/boot/*')], {
-            verbose: true
-        }),
-        new Webpack.NamedModulesPlugin(),
-        new Webpack.HotModuleReplacementPlugin()
+        htmlWebpackPlugin,
+        cleanWebpackPlugin,
+        namedModulesPlugin,
+        hotModuleReplacementPlugin
     ]
 }

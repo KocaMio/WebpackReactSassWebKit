@@ -3,17 +3,11 @@ import '../style/style.scss';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
-import SubApp from './subApp.jsx';
-
 class App extends Component {
-    componentDidMount () {
-        console.log('I am mounted');
-    }
-
     render () {
         return (
-            <div className="hello">221fffdfef12f
-                <SubApp />
+            <div className="hello">
+                <span>Hello, World!</span>
             </div>
         );
     }
