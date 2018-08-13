@@ -8,6 +8,7 @@ class App extends Component {
         return (
             <div className="hello">
                 <span>Hello, World!</span>
+                <i className="fa fa-address-book-o"></i>
             </div>
         );
     }
