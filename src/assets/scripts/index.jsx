@@ -1,4 +1,6 @@
-import '../style/style.scss';
+'use strict'
+
+import '../styles/style.scss';
 
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -8,6 +10,7 @@ class App extends Component {
         return (
             <div className="hello">
                 <span>Hello, World!</span>
+                <i class="fa fa-address-card-o"></i>
             </div>
         );
     }

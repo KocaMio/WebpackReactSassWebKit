@@ -1,6 +1,18 @@
 // Init Variable
 const isProduction = process.env.NODE_ENV === 'production';
-const sassLoader = isProduction ? ['css-loader', 'sass-loader'] : ['style-loader', 'css-loader', 'sass-loader'];
+const postCssLoader = {
+    loader: 'postcss-loader',
+    options: {
+        plugins: () => {
+            return [
+                require('autoprefixer')
+            ];
+        }
+    }
+};
+const cssLoaders = isProduction ?
+    ['css-loader', postCssLoader, 'sass-loader'] :
+    ['style-loader', 'css-loader', postCssLoader,'sass-loader'];
 
 // Load Nodejs Module
 const Path = require('path');
@@ -45,12 +57,22 @@ module.exports = {
         port: 5656,
         open: true
     },
+    resolve: {
+        modules: [
+            Path.resolve(__dirname, 'src/assets/scripts'),
+            'node_modules'
+        ],
+        extensions: [
+            '.js', 
+            '.jsx'
+        ]
+    },
     module: {
         rules: [
             {
                 test: /\.scss$/,
                 use: extractSass.extract({
-                    use: sassLoader
+                    use: cssLoaders
                 })
             }, {
                 test: /\.(js|jsx)$/,
@@ -59,12 +81,32 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         cacheDirectory: true,
+                        plugins: [
+                            'transform-class-properties'
+                        ],
                         presets: [
+                            'stage-3',
+                            'stage-2',
+                            'stage-1',
+                            'stage-0',
+                            'es2017',
+                            'es2016',
+                            'es2015',
                             'env',
                             'react'
                         ]
                     }
                 }
+            }, {
+                test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: 'fonts/',    
+                        publicPath: 'fonts/'       
+                    }
+                }]
             }
         ]
     },
