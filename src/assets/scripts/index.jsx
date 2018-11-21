@@ -10,7 +10,7 @@ class App extends Component {
         return (
             <div className="hello">
                 <span>Hello, World!</span>
-                <i class="fa fa-address-card-o"></i>
+                <i className="fa fa-address-card-o"></i>
             </div>
         );
     }
