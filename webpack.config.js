@@ -10,29 +10,25 @@ const postCssLoader = {
         }
     }
 };
-const cssLoaders = isProduction ?
-    ['css-loader', postCssLoader, 'sass-loader'] :
-    ['style-loader', 'css-loader', postCssLoader,'sass-loader'];
 
 // Load Nodejs Module
 const Path = require('path');
 
 // Load Webpack Plugin
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const Webpack = require('webpack');
 
 // Plugins Instance
+miniCssExtractPlugin = new MiniCssExtractPlugin({
+    filename: 'style.css'
+})
+
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
     template: './src/static/index.html',
     filename: 'index.html',
     hash: true
-});
-
-const extractSass = new ExtractTextPlugin({
-    filename: 'style.css', 
-    disable: isProduction ? false : true
 });
 
 const cleanWebpackPlugin = new CleanWebpackPlugin([Path.resolve(__dirname, 'src/boot/*')], {
@@ -42,6 +38,11 @@ const cleanWebpackPlugin = new CleanWebpackPlugin([Path.resolve(__dirname, 'src/
 const namedModulesPlugin = new Webpack.NamedModulesPlugin();
 
 const hotModuleReplacementPlugin = new Webpack.HotModuleReplacementPlugin();
+
+// Prepare Css Loaders
+const cssLoaders = isProduction ?
+    [MiniCssExtractPlugin.loader, 'css-loader', postCssLoader, 'sass-loader'] :
+    ['style-loader', 'css-loader', postCssLoader,'sass-loader'];
 
 module.exports = {
     entry: './src/assets/scripts/index.jsx',
@@ -71,9 +72,7 @@ module.exports = {
         rules: [
             {
                 test: /\.scss$/,
-                use: extractSass.extract({
-                    use: cssLoaders
-                })
+                use: cssLoaders
             }, {
                 test: /\.(js|jsx)$/,
                 exclude: /node_module/,
@@ -111,7 +110,7 @@ module.exports = {
         ]
     },
     plugins: [
-        extractSass,
+        miniCssExtractPlugin,
         htmlWebpackPlugin,
         cleanWebpackPlugin,
         namedModulesPlugin,
