@@ -19,6 +19,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const Webpack = require('webpack');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 // Plugins Instance
 miniCssExtractPlugin = new MiniCssExtractPlugin({
@@ -49,6 +50,11 @@ module.exports = {
     output: {
         filename: 'index.min.js',
         path: Path.resolve(__dirname, 'src/boot')
+    },
+    optimization: {
+        minimizer: [
+            new OptimizeCSSAssetsPlugin({})
+        ]
     },
     devtool: 'inline-source-map',
     devServer: {
