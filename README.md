@@ -2,14 +2,17 @@
 
 ## Usage
 
-### Develop (webpack-dev-server + HMR)
-
+### Setup
 ~~~
-npm run watch
+npm run setup
 ~~~
 
-### Production 
+### Dev
+~~~
+npm run dev
+~~~
 
+### Build Production
 ~~~
 npm run build
 ~~~
